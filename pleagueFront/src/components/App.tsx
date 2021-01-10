@@ -1,15 +1,18 @@
 import * as React from 'react';
-import {BrowserRouter as Router, Route,} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route,} from 'react-router-dom';
 import Home from '../pages/Home';
 import Profile from '../pages/Profile';
-import Register from '../pages/Register';
+import Chat from "../pages/Chat";
+
+import 'antd/dist/antd.css';
 
 const App = () => {
     return (
         <Router>
             <Route path="/" exact component={Home}/>
             <Route path="/profile" component={Profile}/>
-            <Route path="/Register" component={Register}/>
+            <Route path="/chat" component={Chat}/>
+            <Redirect path="*" to="/" />
         </Router>)
 }
 
