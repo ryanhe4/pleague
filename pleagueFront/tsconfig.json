@@ -11,7 +11,14 @@
 //    "isolatedModules": true,
     "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
+    "baseUrl": "./src",
+    "paths": {
+      "@hooks/*": ["hooks/*"],
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@actions/*": ["actions/*"],
+      "@slices/*": ["slices/*"]
+    },
     "outDir": "./dist",
     "moduleResolution": "node"
   },
