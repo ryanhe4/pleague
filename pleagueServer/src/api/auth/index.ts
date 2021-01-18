@@ -1,4 +1,5 @@
 import * as express from "express";
+import { register, create } from "./auth.ctrl";
 
 const router = express.Router();
 
@@ -8,5 +9,8 @@ router.get(
     res.send("기모링");
   }
 );
+
+router.post("/register", register);
+router.post("/login", create);
 
 export default router;
