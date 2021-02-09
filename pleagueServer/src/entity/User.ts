@@ -3,33 +3,30 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
   Index,
 } from "typeorm";
 
-@Entity()
+@Entity({
+  name: "users",
+})
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({
     type: "varchar",
     unique: true,
     length: 255,
   })
-  email!: string;
+  email: string;
 
   @Column({ length: 255 })
-  username!: string;
+  username: string;
 
   @Column({ type: "text" })
   password!: string;
 
-  @Column("timestampz")
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  @Column("timestampz")
-  @UpdateDateColumn()
-  updatedAt!: Date;
+  @Index()
+  @CreateDateColumn({ type: "timestamp" })
+  created_at: Date;
 }

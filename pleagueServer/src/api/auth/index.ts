@@ -1,5 +1,6 @@
 import * as express from "express";
-import { register, create } from "./auth.ctrl";
+import * as passport from "passport";
+import { register, create, check, isNotLoggedIn } from "./auth.ctrl";
 
 const router = express.Router();
 
@@ -12,5 +13,10 @@ router.get(
 
 router.post("/register", register);
 router.post("/login", create);
+router.get(
+  "/check",
+  passport.authenticate("jwt-refresh", { session: false }),
+  check
+);
 
 export default router;
