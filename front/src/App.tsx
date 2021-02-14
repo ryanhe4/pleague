@@ -2,6 +2,11 @@ import React from 'react'
 import { Global, css } from '@emotion/react'
 import AppLayout from './components/AppLayout'
 import Sidebar from './components/Sidebar'
+import { Route, Switch } from 'react-router-dom'
+import Home from './pages/Home'
+import Workspace from './pages/Workspace'
+import Chat from './pages/Chat'
+import SearchBox from './components/SearchBox'
 
 function App() {
   return (
@@ -10,7 +15,22 @@ function App() {
         <AppLayout.Side>
           <Sidebar />
         </AppLayout.Side>
-        <AppLayout.Main>abababblahblah</AppLayout.Main>
+        <AppLayout.Header>
+          <SearchBox />
+        </AppLayout.Header>
+        <AppLayout.Main>
+          <Switch>
+            <Route path={['/', '/home']} exact>
+              <Home />
+            </Route>
+            <Route path="/workspace">
+              <Workspace />
+            </Route>
+            <Route path="/chat">
+              <Chat />
+            </Route>
+          </Switch>
+        </AppLayout.Main>
       </AppLayout>
       <Global styles={globalStyle} />
     </>

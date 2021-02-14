@@ -24,8 +24,17 @@ function Main({ children }: MainProps) {
   return <main css={mainStyle}>{children}</main>
 }
 
+export type HeaderProps = {
+  children: React.ReactNode
+}
+
+function Header({ children }: HeaderProps) {
+  return <header css={headerStyle}>{children}</header>
+}
+
 AppLayout.Side = Side
 AppLayout.Main = Main
+AppLayout.Header = Header
 
 const sidebarStyle = css`
   width: 16.25rem;
@@ -40,5 +49,11 @@ const mainStyle = css`
   padding-left: 2rem;
   padding-top: 3rem;
   padding-bottom: 3rem;
+  margin-left: 16.25rem;
+`
+
+const headerStyle = css`
+  padding-left: 2rem;
+  padding-top: 3rem;
   margin-left: 16.25rem;
 `
