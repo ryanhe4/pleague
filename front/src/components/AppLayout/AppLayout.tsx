@@ -47,13 +47,15 @@ const sidebarStyle = css`
 `
 const mainStyle = css`
   padding-left: 2rem;
-  padding-top: 3rem;
+  padding-top: 1rem;
   padding-bottom: 3rem;
   margin-left: 16.25rem;
 `
 
 const headerStyle = css`
   padding-left: 2rem;
-  padding-top: 3rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  margin-right: 4rem;
   margin-left: 16.25rem;
 `

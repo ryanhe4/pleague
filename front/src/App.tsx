@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar'
 import { Route, Switch } from 'react-router-dom'
 import Home from './pages/Home'
 import Workspace from './pages/Workspace'
-import Chat from './pages/Chat'
+import SchoolRank from './pages/SchoolRank'
 import SearchBox from './components/SearchBox'
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
               <Workspace />
             </Route>
             <Route path="/chat">
-              <Chat />
+              <SchoolRank />
             </Route>
           </Switch>
         </AppLayout.Main>
