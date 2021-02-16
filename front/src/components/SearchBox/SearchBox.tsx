@@ -26,7 +26,7 @@ const wrapper = css`
 `
 const searchBoxStyle = css`
   width: calc(100% - 12rem);
-  justify-content: center;
+  justify-content: left;
   display: flex;
 `
 

@@ -14,7 +14,7 @@ const searchInputStyle = css`
   font-size: 1rem;
   color: ${palette.blueGrey[800]};
   border: 1px solid ${palette.grey[600]};
-  width: 30rem;
+  width: 60%;
   margin-top: 0;
 `
 

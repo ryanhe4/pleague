@@ -7,11 +7,13 @@ import Home from './pages/Home'
 import Workspace from './pages/Workspace'
 import SchoolRank from './pages/SchoolRank'
 import SearchBox from './components/SearchBox'
+import AuthModal from './components/auth/AuthModal'
 
 function App() {
   return (
     <>
       <AppLayout>
+        <AuthModal visible={false} />
         <AppLayout.Side>
           <Sidebar />
         </AppLayout.Side>
