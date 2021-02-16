@@ -8,6 +8,9 @@ import { ReactComponent as check } from './check.svg'
 import { ReactComponent as plus } from './plus.svg'
 import { ReactComponent as arrow_back } from './arrow_back.svg'
 import { ReactComponent as magnifier } from './magnifier.svg'
+import { ReactComponent as github } from './icon-github.svg'
+import { ReactComponent as facebook } from './icon-facebook.svg'
+import { ReactComponent as google } from './icon-google.svg'
 
 export {
   flask,
@@ -20,4 +23,7 @@ export {
   plus,
   arrow_back,
   magnifier,
+  github,
+  facebook,
+  google
 }

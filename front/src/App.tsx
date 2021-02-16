@@ -7,13 +7,13 @@ import Home from './pages/Home'
 import Workspace from './pages/Workspace'
 import SchoolRank from './pages/SchoolRank'
 import SearchBox from './components/SearchBox'
-import AuthModal from './components/auth/AuthModal'
+import AuthModalControl from './components/auth/AuthModalControl'
 
 function App() {
   return (
     <>
       <AppLayout>
-        <AuthModal visible={false} />
+        <AuthModalControl/>
         <AppLayout.Side>
           <Sidebar />
         </AppLayout.Side>
@@ -25,10 +25,10 @@ function App() {
             <Route path={['/', '/home']} exact>
               <Home />
             </Route>
-            <Route path="/workspace">
+            <Route path='/workspace'>
               <Workspace />
             </Route>
-            <Route path="/chat">
+            <Route path='/chat'>
               <SchoolRank />
             </Route>
           </Switch>
