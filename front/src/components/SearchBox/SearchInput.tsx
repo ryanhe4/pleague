@@ -16,7 +16,10 @@ const searchInputStyle = css`
   border: 1px solid ${palette.grey[600]};
   width: 60%;
   margin-top: 0;
-  min-width: 3.5rem;
+  min-width: 6rem;
+  margin-left: -2rem;
+  max-width: 24rem;
+  
 `
 
 export default SearchInput

@@ -13,7 +13,7 @@ function SearchBox({}: SearchBoxProps) {
         <SearchInput />
         <SearchButton />
       </div>
-      <LoginButton />
+        <LoginButton />
     </div>
   )
 }
@@ -21,13 +21,13 @@ function SearchBox({}: SearchBoxProps) {
 const wrapper = css`
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: right;
 `
 const searchBoxStyle = css`
   width: calc(100% - 12rem);
   justify-content: left;
   display: flex;
+  margin-left: 2rem;
 `
 
 export default SearchBox

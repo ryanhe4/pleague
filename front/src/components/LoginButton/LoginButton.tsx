@@ -17,7 +17,6 @@ const LoginButtonStyle = css`
   border: none;
   outline: none;
   font-weight: bold;
-  word-break: keep-all;
   background: ${palette.blueGrey[600]};
   transition: all 0.125s ease-in 0s;
   cursor: pointer;
