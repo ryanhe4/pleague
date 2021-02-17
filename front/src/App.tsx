@@ -7,13 +7,13 @@ import Home from './pages/Home'
 import Workspace from './pages/Workspace'
 import SchoolRank from './pages/SchoolRank'
 import SearchBox from './components/SearchBox'
-import AuthModalControl from './components/auth/AuthModalControl'
+import Core from './components/Core'
+import Signup from './pages/Signup'
 
 function App() {
   return (
     <>
       <AppLayout>
-        <AuthModalControl/>
         <AppLayout.Side>
           <Sidebar />
         </AppLayout.Side>
@@ -31,10 +31,14 @@ function App() {
             <Route path='/chat'>
               <SchoolRank />
             </Route>
+            <Route path='/signup'>
+              <Signup />
+            </Route>
           </Switch>
         </AppLayout.Main>
       </AppLayout>
       <Global styles={globalStyle} />
+      <Core />
     </>
   )
 }
