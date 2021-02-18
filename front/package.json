@@ -66,6 +66,7 @@
     "react-app-polyfill": "^2.0.0",
     "react-dev-utils": "^11.0.2",
     "react-dom": "^17.0.1",
+    "react-query": "^3.9.8",
     "react-redux": "^7.2.2",
     "react-refresh": "^0.8.3",
     "react-router-dom": "^5.2.0",
@@ -170,5 +171,6 @@
     "plugins": [
       "@emotion"
     ]
-  }
+  },
+  "proxy":"http://localhost:4000"
 }

@@ -1,21 +1,38 @@
 import { css } from '@emotion/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import transitions from '../../lib/transitions'
 import palette from '../../lib/palette'
 
 export type AuthModalProps = {
   children?: React.ReactNode
   visible: boolean
+  onClose: () => void
 }
 
-function AuthModal({ children, visible }: AuthModalProps) {
+function AuthModal({ children, visible, onClose }: AuthModalProps) {
   const [closed, setClosed] = useState(true);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
+    if (visible) {
+      setClosed(false);
+    } else {
+      timeoutId = setTimeout(() => {
+        setClosed(true);
+      }, 200);
+    }
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [visible]);
 
   if (!visible && closed) return null;
 
   return <div css={ModalStyle}>
     <div css={modalWrapper(visible)}>
-      <span css={closeStyle}>&times;</span>
+      <span css={closeStyle} onClick={onClose}>&times;</span>
       {children}
     </div>
   </div>
@@ -53,6 +70,7 @@ const closeStyle = css`
   float: right;
   font-size: 25px;
   margin-right: 0.5rem;
+  cursor: pointer;
 `
 
 export default AuthModal

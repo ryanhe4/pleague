@@ -1,28 +1,20 @@
 import { css } from '@emotion/react'
 import React from 'react'
+import { SearchSchoolsResult } from '../../lib/api/schools/searchSchools'
 
-export type AddressBlockProps = {}
-
-type schoolList = {
-  schoolName: string,
-  address: string,
-  region: string,
-  id: number
+export type AddressBlockProps = {
+  data: SearchSchoolsResult[]
 }
 
-const schoolLists: schoolList[] = [
-  { schoolName: '서울대학교', address: '서울', region: '서울', id: 1 },
-  { schoolName: '경희대학교', address: '세종특별자치시 조치원읍 세종로 2511(서창리, 고려대학교세종캠퍼스)', region: '경희', id: 2 }
-]
 
-function AddressBlock({}: AddressBlockProps) {
+function AddressBlock({data}: AddressBlockProps) {
   return (<>
-    {schoolLists?.length > 0 &&
+    {data?.length > 0 &&
     <div css={wrapper}>
       <ul css={addressListStyle}>
-        {schoolLists.map((schooList) => (
+        {data.map((schooList) => (
           <li css={addressItem} key={schooList.id}>
-            {schooList.schoolName}, {schooList.address}
+            {schooList.schoolName}, {schooList.adres}
           </li>
         ))}
       </ul>

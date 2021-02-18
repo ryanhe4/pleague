@@ -1,10 +1,12 @@
 import { css } from '@emotion/react'
 import palette from '../../lib/palette'
 
-export type LoginButtonProps = {}
+export type LoginButtonProps = {
+  onClick: () => void
+}
 
-function LoginButton({}: LoginButtonProps) {
-  return <button css={LoginButtonStyle}>로그인</button>
+function LoginButton({onClick}: LoginButtonProps) {
+  return <button css={LoginButtonStyle} onClick={onClick} >로그인</button>
 }
 
 const LoginButtonStyle = css`
@@ -21,6 +23,9 @@ const LoginButtonStyle = css`
   transition: all 0.125s ease-in 0s;
   cursor: pointer;
   color: white;
+  &:hover {
+    background: ${palette.blueGrey[700]};
+  }
 `
 
 export default LoginButton

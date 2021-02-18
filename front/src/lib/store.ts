@@ -6,7 +6,8 @@ const middleware = [...getDefaultMiddleware(), logger]
 
 export const store = configureStore({
   reducer,
-  middleware
+  middleware,
+  devTools: true
 })
 
 export type RootState = ReturnType<typeof store.getState>

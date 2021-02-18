@@ -5,10 +5,11 @@ import PasswordInput from './PasswordInput'
 import Pass2Input from './Pass2Input'
 import palette from '../../lib/palette'
 import AuthSocialBox from '../auth/AuthSocialBox'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import AuthCodeInput from './AuthCodeInput'
 import AddressBlock from './AddressBlock'
 import useInput from '../../hooks/useInput'
+import useSearchSchoolsQuery from '../../hooks/query/useSearchSchoolsQuery'
 
 export type RegisterFormProps = {}
 
@@ -16,13 +17,19 @@ function RegisterForm({}: RegisterFormProps) {
   const [name, handleName] = useInput('')
   const [email, handleEmail] = useInput('')
   const [password, handlePassword] = useInput('')
-  const [passwordCheck, handlePasswrodCheck] = useInput('')
+  const [passwordCheck, handlePasswordCheck] = useInput('')
   const [summonerName, handleSummonerName] = useInput('')
   const [schoolName, handleSchoolName] = useInput('')
   const [verifyNum, handleVerifyNum] = useInput('')
 
-  const onClickSendEmail = () => {
+  const handleSchoolSearchClick = () => {
+    refetch()
   }
+
+  const { data, refetch } = useSearchSchoolsQuery(schoolName, {
+    refetchOnWindowFocus: false,
+    enabled: false
+  })
 
   return (
     <div css={containerStyle}>
@@ -35,7 +42,9 @@ function RegisterForm({}: RegisterFormProps) {
       </div>
 
       <h2 css={subTitle}>이메일로 회원가입</h2>
-      <form onSubmit={() => {console.log('클릭!')}} autoComplete='off' css={regForm}>
+      <form onSubmit={() => {
+        console.log('클릭!')
+      }} autoComplete='off' css={regForm}>
         <label css={labelStyle(false)} htmlFor='name'>이름</label>
         <NameInput name={name} handlename={handleName} />
         {/*{!(name.length < 8) && <InvalidMsg>이름이 너무 길어요 !</InvalidMsg>}*/}
@@ -45,13 +54,13 @@ function RegisterForm({}: RegisterFormProps) {
           <button type='button' css={sendEmailBtn} disabled>인증</button>
         </div>
         <div>
-          <AuthCodeInput value={verifyNum} onChange={handleVerifyNum}/>
-          <button type='button' css={sendEmailBtn} onClick={onClickSendEmail}>확인</button>
+          <AuthCodeInput value={verifyNum} onChange={handleVerifyNum} />
+          <button type='button' css={sendEmailBtn}>확인</button>
         </div>
         <label css={labelStyle(false)} htmlFor='password'>비밀번호</label>
         <PasswordInput value={password} onChange={handlePassword} />
         <label css={labelStyle(false)} htmlFor='password2'>비밀번호 확인</label>
-        <Pass2Input value={passwordCheck} onChange={handlePasswrodCheck} />
+        <Pass2Input value={passwordCheck} onChange={handlePasswordCheck} />
         <div style={{ marginTop: '1rem' }}>
           <label css={labelStyle(true)} htmlFor='password2'>롤 소환사명</label>
           <EmailInput value={summonerName} onChange={handleSummonerName} placeholder='ex) Hide on bush' />
@@ -60,8 +69,8 @@ function RegisterForm({}: RegisterFormProps) {
         <div style={{ marginTop: '1rem' }}>
           <label css={labelStyle(true)} htmlFor='password2'>우리 학교</label>
           <EmailInput value={schoolName} onChange={handleSchoolName} placeholder='XX대학교' />
-          <button css={sendEmailBtn} type='button'>검색</button>
-          <AddressBlock />
+          <button css={sendEmailBtn} type='button' onClick={handleSchoolSearchClick}>검색</button>
+          {data && <AddressBlock data={data} />}
         </div>
         <button css={registerBtn} type='submit' disabled>
           회원가입

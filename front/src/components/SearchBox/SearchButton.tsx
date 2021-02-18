@@ -25,7 +25,7 @@ const searchButtonStyle = css`
   padding-bottom: 0.5rem;
 
   &:hover {
-    background: ${palette.blueGrey[900]};
+    background: ${palette.blueGrey[700]};
   }
 `
 

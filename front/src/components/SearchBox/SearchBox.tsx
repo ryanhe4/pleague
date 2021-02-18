@@ -3,17 +3,25 @@ import React from 'react'
 import SearchInput from './SearchInput'
 import SearchButton from './SearchButton'
 import LoginButton from '../LoginButton'
+import { onScreenMask } from '../../lib/slices/commonSlice'
+import { useDispatch } from 'react-redux'
 
 export type SearchBoxProps = {}
 
 function SearchBox({}: SearchBoxProps) {
+  const dispatch = useDispatch();
+
+  const handleLoginClick = () => {
+    dispatch(onScreenMask())
+  }
+
   return (
     <div css={wrapper}>
       <div css={searchBoxStyle}>
         <SearchInput />
         <SearchButton />
       </div>
-        <LoginButton />
+      <LoginButton onClick={handleLoginClick} />
     </div>
   )
 }

@@ -3,10 +3,15 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import AuthSocialBox from './AuthSocialBox'
 import palette from '../../lib/palette'
+import { useDispatch } from 'react-redux'
+import { offScreenMask } from '../../lib/slices/commonSlice'
 
-export type AuthModalFormProps = {}
+export type AuthModalFormProps = {
+  onClose: () => void
+}
 
-function AuthModalForm({}: AuthModalFormProps) {
+function AuthModalForm({ onClose }: AuthModalFormProps) {
+
   return <div css={modalFormStyle}>
     <h3>로그인</h3>
     <h4 className='atemail'>이메일로 로그인</h4>
@@ -23,10 +28,10 @@ function AuthModalForm({}: AuthModalFormProps) {
       로그인{' '}
     </button>
     <h4 className='atemail'>소셜 계정으로 로그인</h4>
-    <AuthSocialBox/>
+    <AuthSocialBox />
     <div css={loginRegStyle}>
-      <div className="loginLine">
-        회원이 아니신가요? <Link to='/signup'>회원가입</Link>
+      <div className='loginLine'>
+        회원이 아니신가요? <Link onClick={onClose} to='/signup'>회원가입</Link>
       </div>
     </div>
   </div>
@@ -41,9 +46,9 @@ const modalFormStyle = css`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  
-  .atemail{
-    color: rgb(134,142,150);
+
+  .atemail {
+    color: rgb(134, 142, 150);
     margin-top: 0.1rem;
     margin-bottom: 0.5rem;
   }
@@ -72,6 +77,7 @@ const loginOption = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .autoLogin {
     font-size: 0.8rem;
     color: #8d8d8d;
@@ -92,7 +98,7 @@ const loginButtonStyle = css`
   border-radius: 3px;
   border-style: none;
   font-weight: bold;
-  
+
   &:hover {
     background: ${palette.blueGrey[800]};
   }
@@ -100,17 +106,23 @@ const loginButtonStyle = css`
 
 const loginRegStyle = css`
   text-align: center;
-  
+
   .loginLine {
     color: #bcbcbc;
     font-size: 1.25rem;
     margin-bottom: 35px;
+
     a {
       color: ${palette.blueGrey[600]};
       text-decoration: none;
       cursor: pointer;
       font-weight: bold;
     }
+
+    a:hover {
+      text-decoration: underline ${palette.blueGrey[600]};
+    }
+  }
 `
 
 export default AuthModalForm
