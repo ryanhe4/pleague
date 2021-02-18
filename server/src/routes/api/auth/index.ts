@@ -1,5 +1,6 @@
 import express from 'express'
-import careerClient from '../../../lib/api/client'
+import careerClient from '../../../lib/api/careerclient'
+import { searchByName, searchBySummoner } from '../../../lib/api/riot/riotAPIs'
 
 const authRoute = express.Router()
 
@@ -21,6 +22,31 @@ type schoolContent = {
   estType: string
   seq: string
 }
+
+authRoute.get('/search/summoner/:username', async (req: express.Request, res: express.Response) => {
+  try {
+    const { username } = req.params
+    if (!username) {
+      return res.status(401).send('오류발생')
+    }
+
+    const encode = encodeURI(username)
+
+    //TODO 간단한 입력검증
+    const byName = await searchByName(encode)
+    const bySummoner = await searchBySummoner(byName.id)
+
+    if(!bySummoner) return res.send(byName)
+
+    const result = {
+      ...byName, ...bySummoner
+    }
+    return res.send(result)
+  } catch (e) {
+    console.error(e)
+    return res.send({})
+  }
+})
 
 authRoute.get('/search/school/:school', async (req: express.Request, res: express.Response) => {
   try {
@@ -51,11 +77,12 @@ authRoute.get('/search/school/:school', async (req: express.Request, res: expres
 
     const { content } = response.data.dataSearch
 
-    const ret = content.map((data: schoolContent) => {
+    const ret = content.map((data: schoolContent, index: number) => {
       return {
         schoolName: data.schoolName,
         adres: data.adres,
-        region: data.region
+        region: data.region,
+        id: index
       }
     })
 
