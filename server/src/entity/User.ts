@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  Index, BaseEntity
+  Index
 } from 'typeorm'
 
 @Entity({
@@ -15,13 +15,13 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column()
+  @Column({  length: 255 })
   email!: string
 
   @Column({ length: 16 })
   username!: string
 
-  @Column({ length: 48 })
+  @Column({ unique: true, length: 48 })
   summoner_name!: string
 
   @Index()
@@ -29,6 +29,6 @@ export class User {
   created_at!: Date
 
   @Index()
-  @Column()
+  @Column({default: false})
   is_certified!: boolean
 }

@@ -14,4 +14,4 @@ export async function searchBySummoner(id: string) {
   }
 }
 
-// TODO Riot Apply return Value
+// TODO Riot Apply return ValueType
