@@ -17,7 +17,6 @@ function AuthModalControl({}: AuthModalControlProps) {
   }
 
   useEffect(() => {
-    console.log(screenMask)
     setOpen(screenMask)
   }, [screenMask])
 

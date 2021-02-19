@@ -1,7 +1,7 @@
 import client from '../client'
 
 export async function searchSchools(keyword: string){
-  const response = await client.get<SearchSchoolsResult[]>(`/api/auth/search/school/${keyword}`, )
+  const response = await client.get<SearchSchoolsResult[]>(`/api/auth/search/school/${keyword}`)
 
   return response.data
 }

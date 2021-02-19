@@ -5,10 +5,11 @@ import useInput from '../../hooks/useInput'
 export type AuthCodeInputProps = {
   value: string
   onChange: ReturnType<typeof useInput>[1]
+  readonly : boolean
 }
 
-function AuthCodeInput({value, onChange}: AuthCodeInputProps) {
-  return <BaseInput css={authCodeStyle} value={value} onChange={onChange} type='text' placeholder='인증번호 6자리를 입력해주세요!' maxLength={6}/>
+function AuthCodeInput({value, onChange, readonly}: AuthCodeInputProps) {
+  return <BaseInput css={authCodeStyle} value={value} onChange={onChange} type='text' placeholder='인증번호 6자리를 입력해주세요!' readOnly={readonly} maxLength={6}/>
 }
 
 const authCodeStyle = css`

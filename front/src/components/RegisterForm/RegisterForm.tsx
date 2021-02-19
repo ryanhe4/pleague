@@ -10,8 +10,24 @@ import AuthCodeInput from './AuthCodeInput'
 import AddressBlock from './AddressBlock'
 import useInput from '../../hooks/useInput'
 import useSearchSchoolsQuery from '../../hooks/query/useSearchSchoolsQuery'
+import PacmanLoader from 'react-spinners/PacmanLoader'
+import useSearchSummonerQuery from '../../hooks/query/useSearchSummonerQuery'
+import { searchSummonerType } from '../../lib/api/summoner/searchSummoner'
+import { QueryObserverResult } from 'react-query'
+import useSendEmailCodeQuery from '../../hooks/query/useSendEmailCodeQuery'
+import useCheckEmailCodeQuery from '../../hooks/query/useCheckEmailCodeQuery'
 
 export type RegisterFormProps = {}
+
+type summonerType = {
+  summonerName: string
+  summonerId: string
+  profileIconId: number
+  summonerLevel: number
+  tier?: string
+  rank?: string
+  leaguePoints?: number
+}
 
 function RegisterForm({}: RegisterFormProps) {
   const [name, handleName] = useInput('')
@@ -19,17 +35,144 @@ function RegisterForm({}: RegisterFormProps) {
   const [password, handlePassword] = useInput('')
   const [passwordCheck, handlePasswordCheck] = useInput('')
   const [summonerName, handleSummonerName] = useInput('')
-  const [schoolName, handleSchoolName] = useInput('')
+  const [schoolName, handleSchoolName, resetSchool, setSchool] = useInput('')
   const [verifyNum, handleVerifyNum] = useInput('')
+  const [summoner, setSummoner] = useState<summonerType | null>(null)
+  const [summonerValidity, setSummonerValidity] = useState(false)
+  const [schoolValidity, setSchoolValidity] = useState(false)
 
-  const handleSchoolSearchClick = () => {
-    refetch()
-  }
+  const handleSchoolClick = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+    const el = e.target as HTMLInputElement
+    const region = el.getAttribute('id')
+    setSchool(() => `${region}`)
+    setSchoolValidity(true)
+  }, [setSchool])
 
-  const { data, refetch } = useSearchSchoolsQuery(schoolName, {
+
+  const { isLoading: schoolInfoLoading, data: schoolData, refetch: refetchSchool } = useSearchSchoolsQuery(schoolName, {
     refetchOnWindowFocus: false,
     enabled: false
   })
+
+  const {
+    isLoading: checkCodeLoading,
+    data: checkCodeResult,
+    refetch: refetchCheckCode
+  } = useCheckEmailCodeQuery(email, verifyNum, {
+    refetchOnWindowFocus: false,
+    enabled: false
+  })
+
+  const {
+    isLoading: sendmailLoading,
+    data: sendmailResult = true,
+    refetch: sendmailFetch
+  } = useSendEmailCodeQuery(email, {
+    refetchOnWindowFocus: false,
+    enabled: false
+  })
+
+  const {
+    isLoading: searchSummonerLoading,
+    data: summonerData,
+    refetch: refetchSummoner
+  } = useSearchSummonerQuery(summonerName, {
+    refetchOnWindowFocus: false,
+    enabled: false
+  })
+
+  const handleCheckCodeClick = useCallback(() => {
+    const regString = /^[0-9]{6}$/
+    if (regString.test(verifyNum)) {
+      refetchCheckCode().then(r => {
+        if (r.error !== null) {
+          alert('오류발생')
+          return
+        }
+        if (r.data === true) {
+          alert('인증되었습니다.')
+        } else {
+          alert('알맞지 않은 인증코드 입니다.')
+        }
+      })
+    } else {
+      alert('알맞지 않은 인증코드 형식 입니다.')
+    }
+  }, [refetchCheckCode, verifyNum])
+
+  const handleSendMailClick = useCallback(() => {
+    const mailformat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+    if (mailformat.test(email)) {
+      sendmailFetch().then(r => {
+        if (r.error !== null) {
+          alert('오류발생')
+          return
+        }
+        if (r.data === true) {
+          alert('이미 등록된 사용자 입니다.')
+        } else {
+          alert('인증번호를 입력해주세요.')
+        }
+      })
+    } else {
+      alert('이메일 형식을 다시 확인해주세요')
+    }
+  }, [email, sendmailFetch])
+  const handleSummonerSearchClick = useCallback(() => {
+    refetchSummoner().then((r) => {
+      const { data }: QueryObserverResult<searchSummonerType, unknown> = r
+      if (data?.name === summonerName) {
+        setSummonerValidity(true)
+        if (data[0]?.queueType === 'RANKED_SOLO_5X5') {
+          const { tier = '', rank = '', leaguePoints = 0 } = data[0]
+          setSummoner({
+            summonerName: data.name,
+            summonerId: data.id,
+            profileIconId: data.profileIconId,
+            summonerLevel: data.summonerLevel,
+            tier,
+            rank,
+            leaguePoints
+          })
+        } else if (data[1]?.queueType === 'RANKED_SOLO_5x5') {
+          const { tier = '', rank = '', leaguePoints = 0 } = data[1]
+          setSummoner({
+            summonerName: data.name,
+            summonerId: data.id,
+            profileIconId: data.profileIconId,
+            summonerLevel: data.summonerLevel,
+            tier,
+            rank,
+            leaguePoints
+          })
+        } else {
+          setSummoner({
+            summonerName: data.name,
+            summonerId: data.id,
+            profileIconId: data.profileIconId,
+            summonerLevel: data.summonerLevel
+          })
+        }
+        alert('인증되었어요 !')
+      } else {
+        alert('해당 소환사가 존재하지 않습니다.')
+      }
+    })
+  }, [refetchSummoner, summonerName])
+  const handleSchoolSearchClick = useCallback(() => {
+    if (schoolName.includes('중학교') || schoolName.includes('고등학교') ||
+      schoolName.includes('대학교')) {
+      if (schoolName === '중학교' || schoolName === '고등학교' || schoolName === '대학교') {
+        alert('학교이름을 정확하게 입력해주세요!')
+        resetSchool()
+      } else {
+        refetchSchool()
+      }
+    } else {
+      alert('학교이름을 정확하게 입력해주세요!')
+      resetSchool()
+    }
+  }, [refetchSchool, resetSchool, schoolName])
 
   return (
     <div css={containerStyle}>
@@ -47,30 +190,61 @@ function RegisterForm({}: RegisterFormProps) {
       }} autoComplete='off' css={regForm}>
         <label css={labelStyle(false)} htmlFor='name'>이름</label>
         <NameInput name={name} handlename={handleName} />
-        {/*{!(name.length < 8) && <InvalidMsg>이름이 너무 길어요 !</InvalidMsg>}*/}
+        {!(name.length < 8) && <div css={InvalidMsg}>이름이 너무 길어요 !</div>}
         <div>
           <label css={labelStyle(false)} htmlFor='email'>이메일</label>
-          <EmailInput value={email} onChange={handleEmail} placeholder='email@gmail.com' />
-          <button type='button' css={sendEmailBtn} disabled>인증</button>
+          <EmailInput id='email' value={email} readOnly={!sendmailResult} onChange={handleEmail}
+                      placeholder='email@gmail.com' />
+          {sendmailLoading ? <div css={spinnerBoxStyle}>
+              <PacmanLoader size={17} color='#F7F700' loading={sendmailLoading} />
+            </div> :
+            <button type='button' css={sendEmailBtn} disabled={!email || !sendmailResult}
+                    onClick={handleSendMailClick}>인증</button>
+          }
         </div>
+        {!sendmailResult &&
         <div>
-          <AuthCodeInput value={verifyNum} onChange={handleVerifyNum} />
-          <button type='button' css={sendEmailBtn}>확인</button>
-        </div>
+          <AuthCodeInput value={verifyNum} onChange={handleVerifyNum} readonly={checkCodeResult} />
+          {checkCodeLoading ?
+            <div css={spinnerBoxStyle}><PacmanLoader size={17} color='#F7F700' loading={checkCodeLoading} /></div>
+            : <button type='button' css={sendEmailBtn} disabled={!verifyNum || checkCodeResult}
+                      onClick={handleCheckCodeClick}>확인</button>
+          }
+        </div>}
         <label css={labelStyle(false)} htmlFor='password'>비밀번호</label>
         <PasswordInput value={password} onChange={handlePassword} />
+        {(password !== '') &&
+        password.length < 8 && ( // 비밀번호 Validation 체크
+          <div css={InvalidMsg}>비밀번호는 8자리 이상이어야 해요 !</div>
+        )}
         <label css={labelStyle(false)} htmlFor='password2'>비밀번호 확인</label>
         <Pass2Input value={passwordCheck} onChange={handlePasswordCheck} />
+        {(passwordCheck !== '') &&
+        password !== passwordCheck && ( // 비밀번호 Validation 체크
+          <div css={InvalidMsg}>비밀번호가 다릅니다.</div>
+        )}
         <div style={{ marginTop: '1rem' }}>
           <label css={labelStyle(true)} htmlFor='password2'>롤 소환사명</label>
-          <EmailInput value={summonerName} onChange={handleSummonerName} placeholder='ex) Hide on bush' />
-          <button type='button' css={sendEmailBtn}>검색</button>
+          <EmailInput id='summoner' value={summonerName} onChange={handleSummonerName} placeholder='ex) Hide on bush'
+                      readOnly={summonerValidity} />
+          {searchSummonerLoading ?
+            <div css={spinnerBoxStyle}>
+              <PacmanLoader size={17} color='#F7F700' loading={searchSummonerLoading} />
+            </div> :
+            <button type='button' css={sendEmailBtn} onClick={handleSummonerSearchClick}
+                    disabled={!summonerName || summonerValidity}>검색</button>
+          }
         </div>
         <div style={{ marginTop: '1rem' }}>
           <label css={labelStyle(true)} htmlFor='password2'>우리 학교</label>
-          <EmailInput value={schoolName} onChange={handleSchoolName} placeholder='XX대학교' />
-          <button css={sendEmailBtn} type='button' onClick={handleSchoolSearchClick}>검색</button>
-          {data && <AddressBlock data={data} />}
+          <EmailInput id='school' value={schoolName} readOnly={schoolValidity} onChange={handleSchoolName}
+                      placeholder='ex) 서울대학교' />
+          {schoolInfoLoading ? <div css={spinnerBoxStyle}>
+              <PacmanLoader size={17} color='#F7F700' loading={schoolInfoLoading} />
+            </div> :
+            <button css={sendEmailBtn} type='button' onClick={handleSchoolSearchClick}
+                    disabled={!schoolName || schoolValidity}>검색</button>}
+          {schoolData && <AddressBlock data={schoolData} onClick={handleSchoolClick} />}
         </div>
         <button css={registerBtn} type='submit' disabled>
           회원가입
@@ -112,6 +286,13 @@ const labelStyle = (isHighlight: boolean) => css`
   font-weight: 400;
   width: 100%;
   padding-left: 0.2rem;
+`
+
+const InvalidMsg = css`
+  margin: -1rem 0 1.5rem;
+  padding-left: 0.2rem;
+  color: #e74c3c;
+  font-size: 0.8rem;
 `
 
 const sendEmailBtn = css`
@@ -177,6 +358,11 @@ const registerBtn = css`
     color: #bdbdbd;
     cursor: default;
   }
+`
+const spinnerBoxStyle = css`
+  display: inline-block;
+  margin-left: 1.1rem;
+  margin-bottom: 0.5rem;
 `
 
 export default RegisterForm

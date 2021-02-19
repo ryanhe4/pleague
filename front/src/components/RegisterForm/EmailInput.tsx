@@ -7,10 +7,14 @@ export type EmailInputProps = {
   placeholder: string
   value: string
   onChange: ReturnType<typeof useInput>[1]
+  id: string,
+  readOnly: boolean
 }
 
-function EmailInput({ placeholder, value, onChange }: EmailInputProps) {
-  return <BaseInput css={emailInput} id='email' type='email' value={value} onChange={onChange} placeholder={placeholder} required readOnly={false} />
+function EmailInput({ placeholder, value, onChange, id, readOnly }: EmailInputProps) {
+  return <BaseInput css={emailInput} id={id} type='email'
+                    value={value} onChange={onChange} placeholder={placeholder}
+                    required readOnly={readOnly} />
 }
 
 const emailInput = css`
