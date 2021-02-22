@@ -1,6 +1,8 @@
 import express from 'express'
 import apiRoute from './routes/api'
 import morgan from 'morgan'
+import cookieParser from 'cookie-parser'
+import jwt, { authenticateJWT } from './middleware/jwt'
 
 const PORT: number = 4000
 
@@ -13,11 +15,13 @@ export default class Server {
 
   setup() {
     this.app.use(express.json())
-    this.app.use(express.urlencoded({extended: true}))
-
+    this.app.use(express.urlencoded({ extended: true }))
     this.app.use(morgan('dev'))
+    this.app.use(cookieParser())
 
-    this.app.use('/api',apiRoute)
+    jwt()
+    this.app.use(authenticateJWT)
+    this.app.use('/api', apiRoute)
   }
 
   start() {

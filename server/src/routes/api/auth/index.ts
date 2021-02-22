@@ -1,5 +1,14 @@
 import express from 'express'
-import { searchSummoner, searchSchools, sendValidatemail, checkValidationCode } from './auth.ctrl'
+import {
+  searchSummoner,
+  searchSchools,
+  sendValidatemail,
+  checkValidationCode,
+  register,
+  dbTest,
+  login
+} from './auth.ctrl'
+import { isLoggedIn } from '../../../middleware/jwt'
 
 const authRoute = express.Router()
 
@@ -11,5 +20,7 @@ authRoute.get('/search/summoner/:username', searchSummoner)
 authRoute.get('/search/school/:school', searchSchools)
 authRoute.post('/sendmail', sendValidatemail)
 authRoute.post('/checkcode', checkValidationCode)
-
+authRoute.post('/register', register)
+authRoute.get('/test', isLoggedIn, dbTest)
+authRoute.post('/login', login)
 export default authRoute
