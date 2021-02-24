@@ -5,11 +5,13 @@ import SearchButton from './SearchButton'
 import LoginButton from '../LoginButton'
 import { onScreenMask } from '../../lib/slices/commonSlice'
 import { useDispatch } from 'react-redux'
+import useLoadUser from '../../hooks/useLoadUser'
 
 export type SearchBoxProps = {}
 
 function SearchBox({}: SearchBoxProps) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+  const [user] = useLoadUser()
 
   const handleLoginClick = () => {
     dispatch(onScreenMask())
@@ -21,10 +23,16 @@ function SearchBox({}: SearchBoxProps) {
         <SearchInput />
         <SearchButton />
       </div>
-      <LoginButton onClick={handleLoginClick} />
+      {user ? <div style={{ display: 'flex' }}>
+          {user}
+          <LoginButton mode='로그아웃' onClick={() => {
+          }} />
+        </div> :
+        <LoginButton mode='로그인' onClick={handleLoginClick} />}
     </div>
   )
 }
+
 
 const wrapper = css`
   height: 100%;

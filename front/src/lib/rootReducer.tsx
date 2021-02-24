@@ -1,8 +1,9 @@
-import {combineReducers } from "@reduxjs/toolkit"
+import { combineReducers } from '@reduxjs/toolkit'
 import commonSlice from './slices/commonSlice'
+import userSlice from './slices/userSlice'
 
 const reducer = combineReducers({
-  commonSlice
+  commonSlice, userSlice
 })
 
 export type ReducerType = ReturnType<typeof reducer>

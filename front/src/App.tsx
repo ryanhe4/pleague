@@ -9,6 +9,7 @@ import SchoolRank from './pages/SchoolRank'
 import SearchBox from './components/SearchBox'
 import Core from './components/Core'
 import Signup from './pages/Signup'
+import SignupSucess from './pages/SignupSuccess/SignupSucess'
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path='/signup'>
               <Signup />
             </Route>
+            <Route path='/signupsuccess' component={SignupSucess}/>
           </Switch>
         </AppLayout.Main>
       </AppLayout>

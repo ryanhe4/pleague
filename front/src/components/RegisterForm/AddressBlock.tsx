@@ -4,7 +4,7 @@ import { SearchSchoolsResult } from '../../lib/api/schools/searchSchools'
 
 export type AddressBlockProps = {
   data: SearchSchoolsResult[]
-  onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>)=> void
+  onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void
 }
 
 function AddressBlock({ data, onClick }: AddressBlockProps) {
@@ -17,6 +17,7 @@ function AddressBlock({ data, onClick }: AddressBlockProps) {
               key={schoolList.id}
               onClick={onClick}
               id={`${schoolList.schoolName} (${schoolList.region})`}
+              value={`${schoolList.adres}`}
           >
             {schoolList.schoolName}, {schoolList.adres}
           </li>

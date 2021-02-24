@@ -16,18 +16,12 @@ import { searchSummonerType } from '../../lib/api/summoner/searchSummoner'
 import { QueryObserverResult } from 'react-query'
 import useSendEmailCodeQuery from '../../hooks/query/useSendEmailCodeQuery'
 import useCheckEmailCodeQuery from '../../hooks/query/useCheckEmailCodeQuery'
+import { SearchSchoolsResult } from '../../lib/api/schools/searchSchools'
+import useRegisterSumbitQuery from '../../hooks/query/useRegisterSubmitQuery'
+import { summonerForm } from '../../lib/api/auth/emailAuth'
+import { useHistory } from 'react-router-dom'
 
 export type RegisterFormProps = {}
-
-type summonerType = {
-  summonerName: string
-  summonerId: string
-  profileIconId: number
-  summonerLevel: number
-  tier?: string
-  rank?: string
-  leaguePoints?: number
-}
 
 function RegisterForm({}: RegisterFormProps) {
   const [name, handleName] = useInput('')
@@ -35,19 +29,34 @@ function RegisterForm({}: RegisterFormProps) {
   const [password, handlePassword] = useInput('')
   const [passwordCheck, handlePasswordCheck] = useInput('')
   const [summonerName, handleSummonerName] = useInput('')
-  const [schoolName, handleSchoolName, resetSchool, setSchool] = useInput('')
+  const [schoolName, handleSchoolName, resetSchool, setSchoolName] = useInput('')
   const [verifyNum, handleVerifyNum] = useInput('')
-  const [summoner, setSummoner] = useState<summonerType | null>(null)
+  const [summoner, setSummoner] = useState<summonerForm | null>(null)
+  const [school, setSchool] = useState<SearchSchoolsResult | null>(null)
   const [summonerValidity, setSummonerValidity] = useState(false)
   const [schoolValidity, setSchoolValidity] = useState(false)
 
   const handleSchoolClick = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const el = e.target as HTMLInputElement
-    const region = el.getAttribute('id')
-    setSchool(() => `${region}`)
-    setSchoolValidity(true)
-  }, [setSchool])
+    const idval = el.getAttribute('id')
+    const adres = el.getAttribute('value')
+    const info = idval?.split('(')
 
+    if (!(info && info[1])) {
+      return
+    }
+
+    const region = info[1].slice(0, info[1].length - 1)
+
+    setSchoolName(() => `${idval}`)
+    setSchoolValidity(true)
+    setSchool({
+      schoolName: info[0],
+      adres,
+      region
+    })
+  }, [setSchoolName])
+  const history = useHistory()
 
   const { isLoading: schoolInfoLoading, data: schoolData, refetch: refetchSchool } = useSearchSchoolsQuery(schoolName, {
     refetchOnWindowFocus: false,
@@ -64,12 +73,28 @@ function RegisterForm({}: RegisterFormProps) {
   })
 
   const {
+    isLoading: registerLoading,
+    refetch: registerFetch
+  } = useRegisterSumbitQuery({
+    email,
+    password,
+    name,
+    summoner,
+    school
+  }, {
+    retry: false,
+    refetchOnWindowFocus: false,
+    enabled: false
+  })
+
+  const {
     isLoading: sendmailLoading,
     data: sendmailResult = true,
     refetch: sendmailFetch
   } = useSendEmailCodeQuery(email, {
     refetchOnWindowFocus: false,
-    enabled: false
+    enabled: false,
+    retry: false
   })
 
   const {
@@ -105,11 +130,10 @@ function RegisterForm({}: RegisterFormProps) {
     if (mailformat.test(email)) {
       sendmailFetch().then(r => {
         if (r.error !== null) {
-          alert('오류발생')
+          if (r.data === true) {
+            alert('이미 등록된 사용자 입니다.')
+          }
           return
-        }
-        if (r.data === true) {
-          alert('이미 등록된 사용자 입니다.')
         } else {
           alert('인증번호를 입력해주세요.')
         }
@@ -126,8 +150,8 @@ function RegisterForm({}: RegisterFormProps) {
         if (data[0]?.queueType === 'RANKED_SOLO_5X5') {
           const { tier = '', rank = '', leaguePoints = 0 } = data[0]
           setSummoner({
-            summonerName: data.name,
-            summonerId: data.id,
+            name: data.name,
+            id: data.id,
             profileIconId: data.profileIconId,
             summonerLevel: data.summonerLevel,
             tier,
@@ -137,8 +161,8 @@ function RegisterForm({}: RegisterFormProps) {
         } else if (data[1]?.queueType === 'RANKED_SOLO_5x5') {
           const { tier = '', rank = '', leaguePoints = 0 } = data[1]
           setSummoner({
-            summonerName: data.name,
-            summonerId: data.id,
+            name: data.name,
+            id: data.id,
             profileIconId: data.profileIconId,
             summonerLevel: data.summonerLevel,
             tier,
@@ -147,8 +171,8 @@ function RegisterForm({}: RegisterFormProps) {
           })
         } else {
           setSummoner({
-            summonerName: data.name,
-            summonerId: data.id,
+            name: data.name,
+            id: data.id,
             profileIconId: data.profileIconId,
             summonerLevel: data.summonerLevel
           })
@@ -160,8 +184,7 @@ function RegisterForm({}: RegisterFormProps) {
     })
   }, [refetchSummoner, summonerName])
   const handleSchoolSearchClick = useCallback(() => {
-    if (schoolName.includes('중학교') || schoolName.includes('고등학교') ||
-      schoolName.includes('대학교')) {
+    if (schoolName.includes('중학교') || schoolName.includes('고등학교') || schoolName.includes('대학교')) {
       if (schoolName === '중학교' || schoolName === '고등학교' || schoolName === '대학교') {
         alert('학교이름을 정확하게 입력해주세요!')
         resetSchool()
@@ -173,6 +196,33 @@ function RegisterForm({}: RegisterFormProps) {
       resetSchool()
     }
   }, [refetchSchool, resetSchool, schoolName])
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault()
+    if (password === passwordCheck && schoolValidity && summonerValidity && checkCodeResult) {
+      // query 요청
+      registerFetch().then(r => {
+        if (r.error) {
+          console.log(r.error)
+          return
+        }
+        if (r.data) {
+          //회원가입 성공페이지 이동?
+          history.push('/signupsuccess')
+        } else {
+          alert('회원가입에 실패 다시 시도해주세요.')
+        }
+      })
+
+    } else if (!checkCodeResult) {
+      alert('이메일 인증을 완료해주세요!')
+    } else if (password !== passwordCheck) {
+      alert('비밀번호를 다시 확인해주세요')
+    } else if (!summonerValidity) {
+      alert('소환사 인증을 다시 진행해주세요.')
+    } else if (!schoolValidity) {
+      alert('학교 정보를 입력해주세요')
+    }
+  }, [checkCodeResult, history, password, passwordCheck, registerFetch, schoolValidity, summonerValidity])
 
   return (
     <div css={containerStyle}>
@@ -185,9 +235,7 @@ function RegisterForm({}: RegisterFormProps) {
       </div>
 
       <h2 css={subTitle}>이메일로 회원가입</h2>
-      <form onSubmit={() => {
-        console.log('클릭!')
-      }} autoComplete='off' css={regForm}>
+      <form onSubmit={handleSubmit} autoComplete='off' css={regForm}>
         <label css={labelStyle(false)} htmlFor='name'>이름</label>
         <NameInput name={name} handlename={handleName} />
         {!(name.length < 8) && <div css={InvalidMsg}>이름이 너무 길어요 !</div>}
@@ -246,9 +294,12 @@ function RegisterForm({}: RegisterFormProps) {
                     disabled={!schoolName || schoolValidity}>검색</button>}
           {schoolData && <AddressBlock data={schoolData} onClick={handleSchoolClick} />}
         </div>
-        <button css={registerBtn} type='submit' disabled>
+        {registerLoading ? <div css={spinnerBoxStyle}>
+          <PacmanLoader size={17} color='#F7F700' loading={registerLoading} />
+        </div> : <button css={registerBtn} type='submit'
+                         disabled={!(name && email && password && passwordCheck && schoolValidity && summonerValidity)}>
           회원가입
-        </button>
+        </button>}
       </form>
     </div>)
 }

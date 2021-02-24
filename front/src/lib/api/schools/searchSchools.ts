@@ -1,6 +1,6 @@
 import client from '../client'
 
-export async function searchSchools(keyword: string){
+export async function searchSchools(keyword: string) {
   const response = await client.get<SearchSchoolsResult[]>(`/api/auth/search/school/${keyword}`)
 
   return response.data
@@ -8,7 +8,7 @@ export async function searchSchools(keyword: string){
 
 export type SearchSchoolsResult = {
   schoolName: string,
-  adres: string,
-  region: string,
-  id: number
+  adres: string | null,
+  region: string | null,
+  id?: number
 }

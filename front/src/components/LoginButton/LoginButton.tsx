@@ -3,10 +3,11 @@ import palette from '../../lib/palette'
 
 export type LoginButtonProps = {
   onClick: () => void
+  mode: string
 }
 
-function LoginButton({onClick}: LoginButtonProps) {
-  return <button css={LoginButtonStyle} onClick={onClick} >로그인</button>
+function LoginButton({onClick, mode}: LoginButtonProps) {
+  return <button css={LoginButtonStyle} onClick={onClick} >{mode}</button>
 }
 
 const LoginButtonStyle = css`
