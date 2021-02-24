@@ -1,7 +1,8 @@
 import passport from 'passport'
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
+import { Strategy as JwtStrategy } from 'passport-jwt'
 import { User } from '../entity/User'
 import { NextFunction, Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
 
 const cookieExtractor = (req: Request) => {
   let jwt = null
@@ -20,7 +21,11 @@ export default () => {
   passport.use(new JwtStrategy(jwtOptions, async (jwt_payload, done) => {
     try {
       const user = await User.findbyEmail(jwt_payload.email)
-      if (user) return done(null, user)
+      const data = {
+        user: user,
+        exp: jwt_payload.exp
+      }
+      if (user) return done(null, data)
       else return done(null, false)
     } catch (e) {
       console.error(e)
@@ -33,11 +38,25 @@ export default () => {
 
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('jwt', { session: false }, (error, user) => {
-    if(error) {
+    if (error) {
       res.status(401).send('잘못된 접근(NOT authenticate)')
     }
     if (user) {
-      req.user = user
+      try {
+        req.user = user.user
+
+        const now = Math.floor(Date.now() / 1000)
+        if (user.exp - now < 60 * 60 * 24 * 3.5) {
+          const token = user.user.generateToken()
+          res.cookie('access_token', token, {
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            httpOnly: true
+          })
+        }
+      } catch (e) {
+        return next()
+      }
+
     }
     next()
   })(req, res, next)

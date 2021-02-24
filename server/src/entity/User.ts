@@ -81,8 +81,8 @@ export class User {
     const token = jwt.sign({
       id: this.id,
       email: this.email,
-      summoner: this.summon_profile,
-      school: this.school_info
+      // summoner: this.summon_profile,
+      // school: this.school_info
     }, key, {
       expiresIn: '7d'
     })

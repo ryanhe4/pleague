@@ -6,7 +6,7 @@ import {
   checkValidationCode,
   register,
   dbTest,
-  login
+  login, checkLogin, logout
 } from './auth.ctrl'
 import { isLoggedIn } from '../../../middleware/jwt'
 
@@ -23,4 +23,6 @@ authRoute.post('/checkcode', checkValidationCode)
 authRoute.post('/register', register)
 authRoute.get('/test', isLoggedIn, dbTest)
 authRoute.post('/login', login)
+authRoute.get('/check', checkLogin)
+authRoute.get('/logout', logout)
 export default authRoute

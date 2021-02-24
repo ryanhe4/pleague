@@ -130,7 +130,7 @@ export const sendValidatemail = async (req: express.Request, res: express.Respon
       email: email.toLowerCase()
     })
     if (user) {
-      return res.status(401).send(!!user)
+      return res.status(400).send(!!user)
     }
 
     let emailValidate = await getRepository(EmailValidate).findOne({
@@ -302,7 +302,6 @@ export const login = async (req: express.Request, res: express.Response) => {
     if (!user) {
       return res.status(401).send('존재하지 않는 계정 입니다.')
     }
-    console.log(user)
     const valid = await user.checkPassword(password)
     if (!valid) {
       return res.status(401).send('잘못된 비밀번호')
@@ -319,10 +318,23 @@ export const login = async (req: express.Request, res: express.Response) => {
     return res.send(e)
   }
 }
+
+export const checkLogin = async (req: express.Request, res: express.Response) => {
+  if (!req.user) return res.status(200).send(false)
+  return res.status(201).send(req.user)
+}
+
+export const logout = async (req: express.Request, res: express.Response) => {
+  res.clearCookie('access_token', {
+    httpOnly: true
+  })
+  return res.status(201).send(!!req.user)
+}
+
+
 export const dbTest = async (req: express.Request, res: express.Response) => {
   try {
     //search use Builder?
-
     res.send({ data: '로그인 상태입니다.' })
   } catch (e) {
     console.error(e)
