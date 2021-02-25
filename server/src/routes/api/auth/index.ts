@@ -8,7 +8,7 @@ import {
   dbTest,
   login, checkLogin, logout
 } from './auth.ctrl'
-import { isLoggedIn } from '../../../middleware/jwt'
+import { isLoggedIn, isNotLoggedIn } from '../../../middleware/jwt'
 
 const authRoute = express.Router()
 
@@ -20,9 +20,9 @@ authRoute.get('/search/summoner/:username', searchSummoner)
 authRoute.get('/search/school/:school', searchSchools)
 authRoute.post('/sendmail', sendValidatemail)
 authRoute.post('/checkcode', checkValidationCode)
-authRoute.post('/register', register)
+authRoute.post('/register', isNotLoggedIn, register)
 authRoute.get('/test', isLoggedIn, dbTest)
-authRoute.post('/login', login)
-authRoute.get('/check', checkLogin)
-authRoute.get('/logout', logout)
+authRoute.post('/login', isNotLoggedIn, login)
+authRoute.get('/check', isLoggedIn, checkLogin)
+authRoute.get('/logout', isLoggedIn, logout)
 export default authRoute
