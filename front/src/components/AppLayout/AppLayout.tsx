@@ -13,6 +13,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 export type SideProps = {
   children: React.ReactNode
 }
+
 function Side({ children }: SideProps) {
   return <aside css={sidebarStyle}>{children}</aside>
 }
@@ -48,6 +49,7 @@ const sidebarStyle = css`
   background: ${palette.grey[50]};
 `
 const mainStyle = css`
+  height: 100%;
   padding-left: 2rem;
   padding-top: 1rem;
   padding-bottom: 3rem;
@@ -60,4 +62,6 @@ const headerStyle = css`
   padding-bottom: 2rem;
   margin-right: 4rem;
   margin-left: 16.25rem;
+  min-width: 30rem;
+  overflow-x: auto;
 `
