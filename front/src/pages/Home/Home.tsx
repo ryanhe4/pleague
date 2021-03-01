@@ -6,6 +6,7 @@ function Home({}: HomeProps) {
   return <div css={pageStyle}>HomePage</div>
 }
 
-const pageStyle = css``
+const pageStyle = css`
+`
 
 export default Home

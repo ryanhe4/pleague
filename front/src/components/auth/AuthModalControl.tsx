@@ -20,6 +20,8 @@ function AuthModalControl({}: AuthModalControlProps) {
     setOpen(screenMask)
   }, [screenMask])
 
+
+
   return <AuthModal onClose={handleClose} visible={open}>
     <AuthModalForm onClose={handleClose}/>
   </AuthModal>

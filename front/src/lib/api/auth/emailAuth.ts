@@ -34,12 +34,27 @@ export async function register(data: registerFormType) {
   return response.data
 }
 
-export async function login(data: { email: string, password: string }) {
-  const response = await client.post('/api/auth/login', data)
-  return response.data
+export type loginData = {
+  email: string
+  password: string
+}
+
+
+export async function login(data: loginData) {
+  try {
+    const response = await client.post('/api/auth/login', data)
+    return response.data
+  } catch (e) {
+    throw e.response.data
+  }
 }
 
 export async function check() {
   const response = await client.get('/api/auth/check')
+  return response.data
+}
+
+export async function logout() {
+  const response = await client.get('/api/auth/logout')
   return response.data
 }

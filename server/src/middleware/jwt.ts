@@ -43,7 +43,7 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
     }
     if (user) {
       try {
-        req.user = user.user
+        req.user = user.user.serialize()
 
         const now = Math.floor(Date.now() / 1000)
         if (user.exp - now < 60 * 60 * 24 * 3.5) {

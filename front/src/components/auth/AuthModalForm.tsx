@@ -1,32 +1,33 @@
 import { css } from '@emotion/react'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import AuthSocialBox from './AuthSocialBox'
 import palette from '../../lib/palette'
-import { useDispatch } from 'react-redux'
-import { offScreenMask } from '../../lib/slices/commonSlice'
+import useInput from '../../hooks/useInput'
+import useUserLogin from '../../hooks/useUserLogin'
 
 export type AuthModalFormProps = {
   onClose: () => void
 }
 
 function AuthModalForm({ onClose }: AuthModalFormProps) {
+  const [email, handleEmail] = useInput('')
+  const [password, handlePassword] = useInput('')
+
+  const [handleClickLogin] = useUserLogin(email, password)
 
   return <div css={modalFormStyle}>
     <h3>로그인</h3>
     <h4 className='atemail'>이메일로 로그인</h4>
-    <input css={loginIDStyle} placeholder='이메일을 입력하세요.' />
-    <input css={loginPassStyle} />
+    <input css={loginIDStyle} onChange={handleEmail} placeholder='이메일을 입력하세요.' />
+    <input css={loginPassStyle} onChange={handlePassword} type='password' placeholder='비밀번호를 입력하세요' />
     <div css={loginOption}>
       <label>{' '}
         <input type='checkbox' id='hint' /> 로그인 유지하기
       </label>
       <div>아이디/비밀번호 찾기</div>
     </div>
-    <button css={loginButtonStyle}>
-      {' '}
-      로그인{' '}
-    </button>
+    <button onClick={handleClickLogin} css={loginButtonStyle}>로그인</button>
     <h4 className='atemail'>소셜 계정으로 로그인</h4>
     <AuthSocialBox />
     <div css={loginRegStyle}>
