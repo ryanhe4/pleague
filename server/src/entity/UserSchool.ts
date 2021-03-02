@@ -5,8 +5,6 @@ import {
   Index,
   JoinColumn,
   OneToMany,
-  OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { User } from './User'
@@ -28,6 +26,9 @@ export class UserSchool {
 
   @Column()
   region!: string
+
+  @Column({ default: 0 })
+  point!: number
 
   @OneToMany(type => User, user => user.school_info)
   @JoinColumn({ name: 'fk_user_id' })
@@ -51,6 +52,9 @@ export class UserSchool {
     newUserSchoolInfo.address = school.adres
     newUserSchoolInfo.region = school.region
     newUserSchoolInfo.school_name = school.schoolName
+    if (school?.point != null) {
+      newUserSchoolInfo.point = school?.point
+    }
     await getRepository(UserSchool).save(newUserSchoolInfo)
     return newUserSchoolInfo
   }

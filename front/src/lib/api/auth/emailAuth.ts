@@ -50,8 +50,12 @@ export async function login(data: loginData) {
 }
 
 export async function check() {
-  const response = await client.get('/api/auth/check')
-  return response.data
+  try {
+    const response = await client.get('/api/auth/check')
+    return response.data
+  } catch (e) {
+    throw e.response.data
+  }
 }
 
 export async function logout() {

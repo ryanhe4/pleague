@@ -8,17 +8,24 @@ export default function useLoadUser() {
   const [username, setUserName] = useState('')
   //쿼리로 ? 1. 데이터 가져오기 2. 데이터 설정 username, 그리고 리덕스
 
-  const { data, refetch } = useLoginCheckQuery({ })
+  const { data, refetch } = useLoginCheckQuery({
+    enabled: false,
+    retry: false,
+    refetchOnWindowFocus: false
+  })
   useEffect(() => {
-    refetch().then(r => {
-      dispatch(loadUser(r.data))
-      console.log(r.data)
-      if (r.data === false) {
-        setUserName('')
+    if (username !== '') {
+      return
+    }
+    const applyAsync = async () => {
+      const ret = await refetch()
+      if (ret.isError) {
         return
       }
-      setUserName(r.data?.summon_profile?.name)
-    })
+      dispatch(loadUser(ret.data))
+    }
+
+    applyAsync()
   }, [dispatch, refetch, username])
 
   return [username] as [string]

@@ -10,6 +10,7 @@ import SearchBox from './components/SearchBox'
 import Core from './components/Core'
 import Signup from './pages/Signup'
 import SignupSucess from './pages/SignupSuccess/SignupSucess'
+import Profile from './pages/Profile'
 
 function App() {
   return (
@@ -29,13 +30,16 @@ function App() {
             <Route path='/workspace'>
               <Workspace />
             </Route>
-            <Route path='/chat'>
+            <Route path='/peerRank'>
               <SchoolRank />
             </Route>
             <Route path='/signup'>
               <Signup />
             </Route>
-            <Route path='/signupsuccess' component={SignupSucess}/>
+            <Route path='/signupsuccess' component={SignupSucess} />
+            <Route path='/profile'>
+              <Profile />
+            </Route>
           </Switch>
         </AppLayout.Main>
       </AppLayout>

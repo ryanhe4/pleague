@@ -1,12 +1,32 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { SearchSchoolsResult } from '../api/schools/searchSchools'
 
-const initialState = {
-  user: null,
+type summonProfileType = {
+  id: number
+  uuid: string
+  name: string
+  profileIconId: number
+  tier: string | null
+  rank: string | null
+  leaguePoints: string | null
+  summoner_level: number
+}
+
+type userType = {
+  id: number
+  email: string
+  username: string
+  summon_profile: summonProfileType
+  school_info: SearchSchoolsResult
+}
+
+type initialStateType = {
+  user: userType | null,
 }
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: { user: null },
+  initialState: { user: null } as initialStateType,
   reducers: {
     loadUser(state, action) {
       state.user = action.payload

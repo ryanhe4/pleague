@@ -198,6 +198,7 @@ export type schoolInfo = {
   schoolName: string
   adres: string
   region: string
+  point?: number
 }
 
 export type userType = {
@@ -264,10 +265,60 @@ export const register = async (req: express.Request, res: express.Response) => {
 
     if (!existSchool) {
       //학교가 존재안할경우 exsitSchool을 사용
-      newSchool = await UserSchool.createInstance(school)
+      newSchool = await UserSchool.createInstance({ ...school, point: 0 })
     }
+
+    enum tierPoint {
+      CHALLENGER = 350,
+      GRANDMASTER = 280,
+      MASTER = 250,
+      DIAMOND = 150,
+      PLATINUM = 100,
+      GOLD = 70,
+      SILVER = 50,
+      BRONZE = 30,
+      IRON = -100,
+      BASE = 0
+    }
+
+    let tp
+    if (summoner.tier) {
+      //티어에 따라 점수 적용해서 school에 반영
+      const getTierScore = (tier: string): number => {
+        switch (tier) {
+          case 'CHALLENGER':
+            return tierPoint.CHALLENGER
+          case 'GRANDMASTER':
+            return tierPoint.GRANDMASTER
+          case 'MASTER':
+            return tierPoint.MASTER
+          case 'DIAMOND':
+            return tierPoint.DIAMOND
+          case 'PLATINUM':
+            return tierPoint.PLATINUM
+          case 'GOLD':
+            return tierPoint.GOLD
+          case 'SILVER':
+            return tierPoint.SILVER
+          case 'BRONZE':
+            return tierPoint.BRONZE
+          case 'IRON':
+            return tierPoint.IRON
+          default:
+            return tierPoint.BASE
+        }
+      }
+
+      tp = getTierScore(summoner.tier)
+      if (existSchool) {
+        existSchool.point = existSchool.point + tp
+        await getRepository(UserSchool).save(existSchool)
+      } else {
+        newSchool!.point = tp
+      }
+    }
+
     const summon_profile = await SummonProfile.createInstance(summoner)
-    // password hash
 
     const user = User.createInstance({ email: email.toLowerCase(), username: name })
     user.school_info = existSchool ? existSchool : newSchool
