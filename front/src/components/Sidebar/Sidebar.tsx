@@ -12,7 +12,7 @@ function Sidebar({}: SidebarProps) {
       <ul css={menuStyle}>
         <SidebarItem icon="flask" text="Home" to="/" />
         <SidebarItem icon="workspace" text="Workspace" to="/workspace" />
-        <SidebarItem icon="globe" text="SchoolRank" to="/chat" />
+        <SidebarItem icon="globe" text="PeerRank" to="/peerRank" />
       </ul>
     </div>
   )

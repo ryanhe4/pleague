@@ -13,9 +13,11 @@ function LoginButton({onClick, mode}: LoginButtonProps) {
 const LoginButtonStyle = css`
   margin-left: 2rem;
   height: 2.5rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: 1rem;
+  width: 6rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  font-size: 0.9rem;
+  user-select: none;
   border-radius: 0.2rem;
   border: none;
   outline: none;

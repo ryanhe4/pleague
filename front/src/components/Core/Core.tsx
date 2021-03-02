@@ -9,7 +9,7 @@ export type CoreProps = {}
 
 function Core({}: CoreProps) {
   const { screenMask } = useSelector((state: RootState) => state.commonSlice)
-  const [user] = useLoadUser()
+  useLoadUser()
 
   return <>
     <ScreenMask visible={screenMask} />

@@ -9,6 +9,8 @@ import { clearUser } from '../../lib/slices/userSlice'
 import { RootState } from '../../lib/store'
 import { useQuery } from 'react-query'
 import { logout } from '../../lib/api/auth/emailAuth'
+import palette from '../../lib/palette'
+import { NavLink } from 'react-router-dom'
 
 export type SearchBoxProps = {}
 
@@ -42,7 +44,9 @@ function SearchBox({}: SearchBoxProps) {
         <SearchButton />
       </div>
       {user ? <div style={{ display: 'flex' }}>
-          이름
+          <NavLink to='/profile' css={linkStyle} exact>
+            <div css={namespaceStyle}>{user!.summon_profile!.name}</div>
+          </NavLink>
           <LoginButton mode='로그아웃' onClick={handleLogoutClick} />
         </div> :
         <LoginButton mode='로그인' onClick={handleLoginClick} />}
@@ -56,11 +60,32 @@ const wrapper = css`
   display: flex;
   justify-content: right;
 `
+
+const linkStyle = css`
+  text-decoration: none;
+  color: ${palette.blueGrey[600]};
+  border-bottom: 1px solid ${palette.blueGrey[600]};
+`
+
 const searchBoxStyle = css`
   width: calc(100% - 12rem);
   justify-content: left;
   display: flex;
   margin-left: 2rem;
+`
+
+const namespaceStyle = css`
+  padding-top: 0.4rem;
+  padding-right: 0;
+  font-weight: bold;
+  user-select: none;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    color: ${palette.blueGrey[800]};
+  }
 `
 
 export default SearchBox

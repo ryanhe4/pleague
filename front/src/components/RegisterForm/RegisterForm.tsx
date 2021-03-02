@@ -19,7 +19,9 @@ import useCheckEmailCodeQuery from '../../hooks/query/useCheckEmailCodeQuery'
 import { SearchSchoolsResult } from '../../lib/api/schools/searchSchools'
 import useRegisterSumbitQuery from '../../hooks/query/useRegisterSubmitQuery'
 import { summonerForm } from '../../lib/api/auth/emailAuth'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../lib/store'
 
 export type RegisterFormProps = {}
 
@@ -35,6 +37,7 @@ function RegisterForm({}: RegisterFormProps) {
   const [school, setSchool] = useState<SearchSchoolsResult | null>(null)
   const [summonerValidity, setSummonerValidity] = useState(false)
   const [schoolValidity, setSchoolValidity] = useState(false)
+  const { user } = useSelector((state: RootState) => state.userSlice)
 
   const handleSchoolClick = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const el = e.target as HTMLInputElement
@@ -223,6 +226,8 @@ function RegisterForm({}: RegisterFormProps) {
       alert('학교 정보를 입력해주세요')
     }
   }, [checkCodeResult, history, password, passwordCheck, registerFetch, schoolValidity, summonerValidity])
+
+  if (user) return <Redirect to='/' />
 
   return (
     <div css={containerStyle}>

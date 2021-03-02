@@ -17,13 +17,12 @@ const searchButtonStyle = css`
   cursor: pointer;
   width: 6rem;
   color: white;
-  border-radius: 0.1rem;
+  border-radius: 0.2rem;
   border: 1px solid ${palette.blueGrey[500]};
   margin-left: 2rem;
   background: ${palette.blueGrey[600]};
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-
   &:hover {
     background: ${palette.blueGrey[700]};
   }
