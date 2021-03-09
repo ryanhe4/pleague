@@ -11,8 +11,8 @@ function Sidebar({}: SidebarProps) {
       <div className="logo">pLeague</div>
       <ul css={menuStyle}>
         <SidebarItem icon="flask" text="Home" to="/" />
-        <SidebarItem icon="workspace" text="Workspace" to="/workspace" />
         <SidebarItem icon="globe" text="PeerRank" to="/peerRank" />
+        <SidebarItem icon="workspace" text="SummonRank" to="/summonerRank" />
       </ul>
     </div>
   )

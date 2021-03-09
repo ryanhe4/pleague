@@ -10,7 +10,6 @@ import { UserSchool } from '../../../entity/UserSchool'
 import { SummonProfile } from '../../../entity/SummonProfile'
 import Joi from 'joi'
 
-
 export const searchSchools = async (req: express.Request, res: express.Response) => {
   type schoolContent = {
     campusName: string
@@ -260,6 +259,7 @@ export const register = async (req: express.Request, res: express.Response) => {
     }
 
     // 3. 이미 해당 학교가 존재하는지 확인
+    school.schoolName = school.schoolName.trim()
     const existSchool = await UserSchool.findBySchoolName(school.schoolName)
     let newSchool: UserSchool | undefined
 
@@ -269,8 +269,8 @@ export const register = async (req: express.Request, res: express.Response) => {
     }
 
     enum tierPoint {
-      CHALLENGER = 350,
-      GRANDMASTER = 280,
+      CHALLENGER = 500,
+      GRANDMASTER = 350,
       MASTER = 250,
       DIAMOND = 150,
       PLATINUM = 100,
@@ -318,13 +318,17 @@ export const register = async (req: express.Request, res: express.Response) => {
       }
     }
 
-    const summon_profile = await SummonProfile.createInstance(summoner)
-
     const user = User.createInstance({ email: email.toLowerCase(), username: name })
+    const summon_profile = SummonProfile.createInstance(summoner)
+    await getRepository(SummonProfile).save(summon_profile)
+
     user.school_info = existSchool ? existSchool : newSchool
     user.summon_profile = summon_profile
     await user.setPassword(password)
+
     await getRepository(User).save(user)
+    summon_profile.user = user
+    await getRepository(SummonProfile).save(summon_profile)
 
     const token = user.generateToken()
     res.cookie('access_token', token, {

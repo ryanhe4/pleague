@@ -19,10 +19,10 @@ export class SummonProfile {
   @PrimaryGeneratedColumn()
   id!: number
 
-  @Column({unique: true})
+  @Column({ unique: true })
   uuid!: string
 
-  @Column({unique: true})
+  @Column({ unique: true })
   name!: string
 
   @Column()
@@ -40,7 +40,8 @@ export class SummonProfile {
   @Column()
   summoner_level!: number
 
-  @OneToOne(() => User, user => user.summon_profile)
+  @OneToOne(() => User, user => user.summon_profile, { onDelete: 'CASCADE' })
+  @JoinColumn()
   user!: User
 
   @Index()
@@ -56,7 +57,7 @@ export class SummonProfile {
     })
   }
 
-  static async createInstance(summoner: summonerInfo) {
+  static createInstance(summoner: summonerInfo) {
     const newSummoner = new SummonProfile()
     if (summoner.rank != null) {
       newSummoner.rank = summoner.rank
@@ -71,7 +72,6 @@ export class SummonProfile {
     newSummoner.profileIconId = summoner.profileIconId
     newSummoner.name = summoner.name
     newSummoner.summoner_level = summoner.summonerLevel
-    await getRepository(SummonProfile).save(newSummoner)
 
     return newSummoner
   }

@@ -4,7 +4,7 @@ import AppLayout from './components/AppLayout'
 import Sidebar from './components/Sidebar'
 import { Route, Switch } from 'react-router-dom'
 import Home from './pages/Home'
-import Workspace from './pages/Workspace'
+import SummonRank from './pages/SummonRank'
 import SchoolRank from './pages/SchoolRank'
 import SearchBox from './components/SearchBox'
 import Core from './components/Core'
@@ -27,8 +27,8 @@ function App() {
             <Route path={['/', '/home']} exact>
               <Home />
             </Route>
-            <Route path='/workspace'>
-              <Workspace />
+            <Route path='/summonerRank'>
+              <SummonRank />
             </Route>
             <Route path='/peerRank'>
               <SchoolRank />

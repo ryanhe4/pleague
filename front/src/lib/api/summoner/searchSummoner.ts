@@ -24,13 +24,31 @@ export type searchSummonerType = {
   profileIconId: number
   revisionData: number
   summonerLevel: number
-  "0"?: summonerEntryType
-  "1"?: summonerEntryType
+  '0'?: summonerEntryType
+  '1'?: summonerEntryType
 }
 
 
 //keyword : summoner name
 export async function searchSummoner(keyword: string) {
   const { data } = await client.get<searchSummonerType>(`/api/auth/search/summoner/${keyword}`)
+  return data
+}
+
+export type summonerType = {
+  id: number
+  tier: string
+  rank: string
+  leaguePoints: number
+  name: string
+}
+
+
+export async function getSummonerList(school: string) {
+  if (school === '1') {
+    const { data } = await client.get<{ summoner: summonerType[], school: string }>(`/api/rank/summoners/`)
+    return data
+  }
+  const { data } = await client.get<{ summoner: summonerType[] }>(`/api/rank/summoners/${school}`)
   return data
 }

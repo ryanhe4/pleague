@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { loadUser } from '../lib/slices/userSlice'
 import { offScreenMask } from '../lib/slices/commonSlice'
+import { setCurrentSchool } from '../lib/slices/rankSlice'
 
 export default function useUserLogin(email: string, password: string) {
   const { refetch } = useQuery('login', () => login({ email, password }), {
@@ -21,6 +22,7 @@ export default function useUserLogin(email: string, password: string) {
       return
     }
     dispatch(loadUser(ret.data))
+    dispatch(setCurrentSchool(ret.data.school_info.school_name))
     dispatch(offScreenMask())
   }, [dispatch, refetch])
 

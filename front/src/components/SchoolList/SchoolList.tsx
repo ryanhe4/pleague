@@ -24,7 +24,7 @@ function SchoolList({}: SchoolListProps) {
             {index > 3 &&index + 1}
           </div>
           <div css={schoolNameStyle}>
-            <span>{school.school_name}</span>
+            <span>{school.school_name} ({school.region})</span>
           </div>
           <div>
             {school.point}
@@ -43,7 +43,7 @@ const schoolNameStyle = css`
     cursor: pointer;
   }
 `
-const medalStyle = (rank: number) => css`
+export const medalStyle = (rank: number) => css`
   ${rank && rank === 1 && css`
     color: gold;
   `}
@@ -77,26 +77,26 @@ const wrapper = css`
   }
 
   //header
-  & > div:nth-child(1),
-  div:nth-child(2),
-  div:nth-child(3) {
+  & > div:nth-of-type(1),
+  div:nth-of-type(2),
+  div:nth-of-type(3) {
     border-top: none;
     border-bottom: 2px solid #9e9e9e;
     font-weight: bold;
 
   }
 
-  & > div:nth-child(4),
-  div:nth-child(5),
-  div:nth-child(6) {
+  & > div:nth-of-type(4),
+  div:nth-of-type(5),
+  div:nth-of-type(6) {
     border-top: none;
   }
 
-  & div:nth-child(3) {
+  & div:nth-of-type(3) {
     border-radius: 0 12px 0 0;
   }
 
-  & div:last-child {
+  & div:last-of-type {
     border-radius: 0 0 12px 0;
   }
 `

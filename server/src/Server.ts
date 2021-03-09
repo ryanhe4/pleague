@@ -1,6 +1,7 @@
 import express from 'express'
 import apiRoute from './routes/api'
 import morgan from 'morgan'
+import compression  from 'compression'
 import cookieParser from 'cookie-parser'
 import jwt, { authenticateJWT } from './middleware/jwt'
 
@@ -16,9 +17,9 @@ export default class Server {
   setup() {
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
+    this.app.use(compression())
     this.app.use(morgan('dev'))
     this.app.use(cookieParser())
-
     jwt()
     this.app.use(authenticateJWT)
     this.app.use('/api', apiRoute)

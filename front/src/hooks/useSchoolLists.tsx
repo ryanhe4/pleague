@@ -25,7 +25,7 @@ export default function useSchoolLists() {
       dispatch(setSchoolList(sorted))
     }
     apply()
-  }, [dispatch, refetch])
+  }, [dispatch, refetch, schoolList])
 
   return [schoolList]
 }

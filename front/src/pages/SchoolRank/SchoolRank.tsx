@@ -4,10 +4,11 @@ import SchoolList from '../../components/SchoolList'
 export type SchoolRankProps = {}
 
 function SchoolRank({}: SchoolRankProps) {
-  return (<div>
+  return (<>
+    <h1>학교 랭킹</h1>
     <SchoolList />
     <div>스쿨pagination</div>
-  </div>)
+  </>)
 }
 
 export default SchoolRank
