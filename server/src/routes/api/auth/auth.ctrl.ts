@@ -135,6 +135,7 @@ export const sendValidatemail = async (req: express.Request, res: express.Respon
     let emailValidate = await getRepository(EmailValidate).findOne({
       email: email.toLowerCase()
     })
+
     if (!emailValidate) {
       emailValidate = new EmailValidate()
       emailValidate.email = email.toLowerCase()
