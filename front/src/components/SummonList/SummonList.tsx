@@ -8,7 +8,7 @@ import { medalStyle } from '../SchoolList/SchoolList'
 export type SummonListProps = {}
 
 function SummonList({}: SummonListProps) {
-  const [summonerList] = useSummonerLists()
+  const [summonerList, , TopRank] = useSummonerLists()
 
   console.log(summonerList)
 
@@ -18,14 +18,15 @@ function SummonList({}: SummonListProps) {
     <div>티어</div>
     <div>LP</div>
     <>
-      {summonerList && summonerList.map((summoner, index) => (
+      {summonerList && summonerList.slice(TopRank - 1, TopRank + 2).map((summoner, index) => (
         <React.Fragment key={summoner.name}>
           <div>
-            {(index + 1) === 1 && <XIcon name='medal' css={medalStyle(index + 1)} />}
-            {(index + 1) === 2 && <XIcon name='medal' css={medalStyle(index + 1)} />}
-            {(index + 1) === 3 && <XIcon name='medal' css={medalStyle(index + 1)} />}
+            {(index + TopRank) === 1 && <XIcon name='medal' css={medalStyle(index + 1)} />}
+            {(index + TopRank) === 2 && <XIcon name='medal' css={medalStyle(index + 1)} />}
+            {(index + TopRank) === 3 && <XIcon name='medal' css={medalStyle(index + 1)} />}
 
-            {index > 3 && index + 1}
+            {index >= 3 && index + TopRank}
+            {index + TopRank !== 1 && index + TopRank !== 2 && index + TopRank !== 3 && index + TopRank}
           </div>
           <div>
             <span>{summoner.name}</span>

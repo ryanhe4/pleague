@@ -44,11 +44,21 @@ export type summonerType = {
 }
 
 
-export async function getSummonerList(school: string) {
+export async function getSummonerList(school: string, cursor?: number) {
   if (school === '1') {
-    const { data } = await client.get<{ summoner: summonerType[], school: string }>(`/api/rank/summoners/`)
+    const { data } = await client.get<{ summoner: summonerType[], school: string, count: number }>(`/api/rank/summoners/`)
     return data
   }
-  const { data } = await client.get<{ summoner: summonerType[] }>(`/api/rank/summoners/${school}`)
+
+  let params
+  if (cursor) {
+    params =  {
+      cursor
+    }
+  }
+
+  const { data } = await client.get<{ summoner: summonerType[], school?: string, count?: number }>(`/api/rank/summoners/${school}`, {
+    params
+  })
   return data
 }
